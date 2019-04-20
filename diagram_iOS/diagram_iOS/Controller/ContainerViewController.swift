@@ -59,7 +59,7 @@ class ContainerViewController: UIViewController {
         homeViewController = HomeViewController()
         HomeViewController.delegate = self
         navController = UINavigationController(rootViewController: homeViewController)
-        //setupHomeViewLayout()
+            //setupHomeViewLayout()
         view.addSubview(navController.view)
         addChild(navController)
         didMove(toParent: self)
@@ -126,6 +126,9 @@ class ContainerViewController: UIViewController {
             ContainerViewController.menuDelegate!.moveToTrash()
         case .Trash:
             ContainerViewController.menuDelegate!.listTrashItems()
+        case .SetTemplate:
+            let template = A4TemplateViewController()
+            self.present(template, animated: true, completion: nil)
         }
     }
     

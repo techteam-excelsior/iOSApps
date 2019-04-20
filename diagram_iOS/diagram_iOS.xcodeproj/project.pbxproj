@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3F0BF9732251E78E0039BB6D /* LandingPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F0BF9722251E78E0039BB6D /* LandingPageViewController.swift */; };
+		3F139A54226B01F000B1736F /* a4TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F139A53226B01F000B1736F /* a4TemplateViewController.swift */; };
 		3F15B80D2259D98B00901805 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F15B8072259D98B00901805 /* GridView.swift */; };
 		3F15B80E2259D98B00901805 /* ArrowShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F15B8082259D98B00901805 /* ArrowShape.swift */; };
 		3F15B8112259D98B00901805 /* arrow3.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3F15B80B2259D98B00901805 /* arrow3.swift */; };
@@ -35,6 +36,7 @@
 
 /* Begin PBXFileReference section */
 		3F0BF9722251E78E0039BB6D /* LandingPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingPageViewController.swift; sourceTree = "<group>"; };
+		3F139A53226B01F000B1736F /* a4TemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = a4TemplateViewController.swift; sourceTree = "<group>"; };
 		3F15B8072259D98B00901805 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GridView.swift; sourceTree = "<group>"; };
 		3F15B8082259D98B00901805 /* ArrowShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ArrowShape.swift; sourceTree = "<group>"; };
 		3F15B80B2259D98B00901805 /* arrow3.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = arrow3.swift; sourceTree = "<group>"; };
@@ -137,6 +139,7 @@
 				3FC956662244C42C00FF31B2 /* SlideViewController.swift */,
 				3F0BF9722251E78E0039BB6D /* LandingPageViewController.swift */,
 				3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */,
+				3F139A53226B01F000B1736F /* a4TemplateViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -242,6 +245,7 @@
 				3FA9C1A022548867001B10C5 /* FileHandling.swift in Sources */,
 				3FC9567D2244C44100FF31B2 /* PDFExtension.swift in Sources */,
 				3FC9566E2244C42C00FF31B2 /* ContainerViewController.swift in Sources */,
+				3F139A54226B01F000B1736F /* a4TemplateViewController.swift in Sources */,
 				3F15B8112259D98B00901805 /* arrow3.swift in Sources */,
 				3F0BF9732251E78E0039BB6D /* LandingPageViewController.swift in Sources */,
 				3FC956812244C44100FF31B2 /* CircleView.swift in Sources */,

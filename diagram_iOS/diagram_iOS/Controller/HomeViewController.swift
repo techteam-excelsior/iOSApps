@@ -51,6 +51,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     var jsonData : Data?
     var oldjSONData : Data?
     static var uniqueProcessID = 0
+    var count = 0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +62,14 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         ContainerViewController.menuDelegate = self
         // Do any additional setup after loading the view
         load_action()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if count == 0 {
+            let template = A4TemplateViewController()
+            present(template, animated: true, completion: nil)
+        }
+        count = 1
     }
     
     // MARK: - Handlers
@@ -266,6 +275,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             allData.allArrows.append(data.arrowsAndData[arrow]!)
         }
         self.jsonData = try? jsonEncoder.encode(allData)
+        
+        
         print("Checking old data")
         print(getURL(for: .ProjectInShared))
         print(getURL(for: .ApplicationInShared))
@@ -291,8 +302,6 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             let decodedData = try? jsonDecoder.decode(entireData.self, from: self.jsonData!)
             if decodedData != nil {
                 let allData = decodedData
-                print(allData?.allArrows.count)
-                print(allData?.allViews.count)
                 restoreState(allData: allData!)
             }
         }
@@ -331,6 +340,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
                 dropZone!.layer.addSublayer(arrowShape)
             }
         }
+        A4TemplateViewController.dataDict = allData.template
     }
     
     //    Generates unique ID for the shapes
@@ -407,6 +417,10 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         if self.jsonData != nil, self.oldjSONData != nil, String(data: self.jsonData!, encoding: .utf8) == String(data: self.oldjSONData!, encoding: .utf8)
         {
             dismiss(animated: true)
+        }
+            
+        else if self.oldjSONData == nil, self.jsonData != nil {
+            dismiss(animated: true, completion: nil)
         }
             
         else
@@ -724,6 +738,7 @@ extension HomeViewController: menuControllerDelegate
             data.arrowsAndData[arrow]?.isExpanded = arrow.isExpanded
             allData.allArrows.append(data.arrowsAndData[arrow]!)
         }
+        allData.template = A4TemplateViewController.dataDict
         self.jsonData = try? jsonEncoder.encode(allData)
         
 //        let path = getURL(for: .Documents).appendingPathComponent(LandingPageViewController.projectName)
@@ -736,27 +751,29 @@ extension HomeViewController: menuControllerDelegate
 
     func saveViewStateAsNew() {
         
-        let jsonEncoder = JSONEncoder()
-        let allData = entireData()
-        
-        for view in data.views
-        {
-            data.viewsAndData[view]?.text = view.textView.text
-            data.viewsAndData[view]?.x = Double(view.frame.origin.x)
-            data.viewsAndData[view]?.y = Double(view.frame.origin.y)
-            data.viewsAndData[view]?.width = Double(view.frame.width)
-            data.viewsAndData[view]?.height = Double(view.frame.height)
-            allData.allViews.append(data.viewsAndData[view]!)
-        }
-        
-        for arrow in data.arrows
-        {
-            data.arrowsAndData[arrow]?.okText = arrow.okTextField.text ?? ""
-            data.arrowsAndData[arrow]?.timeText = arrow.timeTextField.text ?? ""
-            data.arrowsAndData[arrow]?.isExpanded = arrow.isExpanded
-            allData.allArrows.append(data.arrowsAndData[arrow]!)
-        }
-        self.jsonData = try? jsonEncoder.encode(allData)
+        saveViewState()
+//        let jsonEncoder = JSONEncoder()
+//        let allData = entireData()
+//
+//        for view in data.views
+//        {
+//            data.viewsAndData[view]?.text = view.textView.text
+//            data.viewsAndData[view]?.x = Double(view.frame.origin.x)
+//            data.viewsAndData[view]?.y = Double(view.frame.origin.y)
+//            data.viewsAndData[view]?.width = Double(view.frame.width)
+//            data.viewsAndData[view]?.height = Double(view.frame.height)
+//            allData.allViews.append(data.viewsAndData[view]!)
+//        }
+//
+//        for arrow in data.arrows
+//        {
+//            data.arrowsAndData[arrow]?.okText = arrow.okTextField.text ?? ""
+//            data.arrowsAndData[arrow]?.timeText = arrow.timeTextField.text ?? ""
+//            data.arrowsAndData[arrow]?.isExpanded = arrow.isExpanded
+//            allData.allArrows.append(data.arrowsAndData[arrow]!)
+//        }
+//        allData.template = TemplateViewController.dataDict
+//        self.jsonData = try? jsonEncoder.encode(allData)
         
         
         

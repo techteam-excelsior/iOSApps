@@ -15,6 +15,7 @@ enum MenuOption: Int, CustomStringConvertible{
     case ExportPDF
     case Delete
     case Trash
+    case SetTemplate
     
     var description: String
     {
@@ -26,6 +27,7 @@ enum MenuOption: Int, CustomStringConvertible{
         case .ExportPDF: return "Export as PDF"
         case .Delete: return "Delete"
         case .Trash: return "Trash"
+        case .SetTemplate: return "Change Template"
         }
     }
     
@@ -37,6 +39,7 @@ enum MenuOption: Int, CustomStringConvertible{
         case .ExportPDF: return UIImage(named: "profile") ?? UIImage()
         case .Delete: return UIImage(named: "exit") ?? UIImage()
         case .Trash: return UIImage(named: "exit") ?? UIImage()
+        case .SetTemplate: return #imageLiteral(resourceName: "profile")
         }
     }
 }

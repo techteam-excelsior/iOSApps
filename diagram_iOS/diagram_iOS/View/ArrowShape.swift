@@ -231,12 +231,17 @@ class ArrowShape: CAShapeLayer, UIGestureRecognizerDelegate {
     @objc func tapTime(_ sender: UITapGestureRecognizer){
         print("Time gesture called")
         
-        UIApplication.shared.keyWindow?.rootViewController!.showInputDialog(title: "Add Time",
-                                                                            subtitle: "Please enter the time below.",
-                                                                            actionTitle: "Add",
-                                                                            cancelTitle: "Cancel",
-                                                                            inputPlaceholder: "Time in hours",
-                                                                            inputKeyboardType: .numberPad)
+        var topController = UIApplication.shared.keyWindow!.rootViewController as! UIViewController
+        while ((topController.presentedViewController) != nil) {
+            topController = topController.presentedViewController!;
+        }
+        
+        topController.showInputDialog(title: "Add Time",
+            subtitle: "Please enter the time below.",
+                            actionTitle: "Add",
+                            cancelTitle: "Cancel",
+                            inputPlaceholder: "Time in hours",
+                            inputKeyboardType: .numberPad)
         { (input:String?) in
             if input != ""{
                 self.timeTextField.isHidden = false
