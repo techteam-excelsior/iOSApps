@@ -37,7 +37,7 @@ class helperDatabase {
 class entireData: Codable {
     var allViews = [uiViewData]()
     var allArrows = [arrowData]()
-    var template = [String:String]()
+    var template = [String]()
 }
 
 struct uiViewData: Codable {

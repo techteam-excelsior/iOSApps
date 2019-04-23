@@ -8,8 +8,15 @@
 
 import UIKit
 
-class A4TemplateViewController: UIViewController {
+class A4TemplateViewController: UIViewController, UITextFieldDelegate, UITextViewDelegate {
+    
     static var dataDict : [String:String] = [String:String]()
+    var textDict : [UITextField:String] = [UITextField:String]()
+    
+    var fields = [UITextField]()
+    static var fieldTexts = [String]()
+    
+    
     let generateTemplate : UIButton =
     {
         let button = UIButton()
@@ -21,6 +28,7 @@ class A4TemplateViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+    
     var notesView: UITextView! = {
         let box = UITextView()
         box.backgroundColor = .white
@@ -110,6 +118,7 @@ class A4TemplateViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     var pfdRevNo : UILabel  = {
         let label = UILabel()
         label.backgroundColor = .white
@@ -141,101 +150,140 @@ class A4TemplateViewController: UIViewController {
     
     var pfcField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var ffNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
+        field.textAlignment = .center
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
+    
+
+    
     var issueNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var customerNameField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var projectNameField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var ipcCriteriaField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var productNameField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var productPartNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var productRevNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var pfdNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var pfdRevNoField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var revDateField  : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     var intendedUseField : UITextField = {
         let field = UITextField()
-        field.backgroundColor = .white
+        field.backgroundColor = .lightGray
+        field.borderStyle = .bezel
+        field.placeholder = "Enter Here"
         field.translatesAutoresizingMaskIntoConstraints = false
         field.font = UIFont(name: "Avenir", size: 14)?.bold()
         return field
     }()
     
+    var notes: UITextView = {
+        let view = UITextView()
+        view.layer.borderWidth = 0.2
+        view.layer.borderColor = #colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)
+        view.backgroundColor = .lightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.frame = CGRect(x: 0, y: 0, width: 768, height: 20)
+        view.isScrollEnabled = false
+        return view
+    }()
     
     var templateView : UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.backgroundColor = #colorLiteral(red: 1.0, green: 1.0, blue: 1.0, alpha: 1.0)
+        view.backgroundColor = .white
         return view
     }()
     
@@ -254,6 +302,25 @@ class A4TemplateViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        fields.append(contentsOf: [pfcField, ffNoField, issueNoField, customerNameField, projectNameField, ipcCriteriaField, productNameField, productPartNoField, productRevNoField, pfdNoField, pfdRevNoField,revDateField,intendedUseField])
+
+//        textDict[ffNoField] = "FF"
+//        textDict[issueNoField] = "Issue No."
+//        textDict[customerNameField] = "Customer Name"
+//        textDict[projectNameField] = "Project Name"
+//        textDict[ipcCriteriaField] = "IPC Acceptance Criteria"
+//        textDict[projectNameField] = "Product Name"
+//        textDict[productPartNoField] = "Product Part No."
+//        textDict[productRevNoField] = "Product Revision No."
+//        textDict[pfdNoField] = "PFD No."
+//        textDict[pfdRevNoField] = "PFD Rev No."
+//        textDict[revDateField] = "Revision Date"
+//        textDict[intendedUseField] = "Intended Use"
+
+        
+        
+        
         loadDataDict()
         view.backgroundColor = .white
         view.addSubview(templateView)
@@ -264,13 +331,16 @@ class A4TemplateViewController: UIViewController {
         ff.textAlignment = .center
         self.templateView.addSubview(ff)
         
+        
         self.templateView.addSubview(rhos)
         
         pfcField.textAlignment = .center
         pfcField.text = "Process Flow Diagram"
+        
         self.templateView.addSubview(pfcField)
         
         self.templateView.addSubview(ffNoField)
+        ffNoField.delegate = self
         
         issueNoField.textAlignment = .center
         self.templateView.addSubview(issueNoField)
@@ -303,13 +373,17 @@ class A4TemplateViewController: UIViewController {
         self.templateView.addSubview(pfdNoField)
         self.templateView.addSubview(pfdRevNoField)
         self.templateView.addSubview(revDateField)
+        
+        self.templateView.addSubview(intendedUseField)
+        self.templateView.addSubview(notes)
+        
         self.view.addSubview(generateTemplate)
         
         generateTemplate.addTarget(self, action: #selector(didClickLooksGood), for: .touchUpInside)
         
         print(self.view.frame.width)
         setupTemplateLayout()
-        print(A4TemplateViewController.dataDict["FF"] ?? "")
+        
         //view.addSubview(looksGood)
         //setupLooksGoodLayout()
         //looksGood.addTarget(self, action: #selector(didClickLooksGood), for: .touchUpInside)
@@ -357,12 +431,12 @@ class A4TemplateViewController: UIViewController {
         //Column1
         custName.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 0).isActive = true
         custName.topAnchor.constraint(equalTo: pfcField.bottomAnchor, constant: 0).isActive = true
-        custName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2 - 20).isActive = true
+        custName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         custName.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         projName.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 0).isActive = true
         projName.topAnchor.constraint(equalTo: custName.bottomAnchor, constant: 0).isActive = true
-        projName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-40).isActive = true
+        projName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         projName.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         ipcAccCrit.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 0).isActive = true
@@ -372,18 +446,18 @@ class A4TemplateViewController: UIViewController {
         
         intPurpose.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 0).isActive = true
         intPurpose.topAnchor.constraint(equalTo: ipcAccCrit.bottomAnchor, constant: 0).isActive = true
-        intPurpose.widthAnchor.constraint(equalToConstant: self.view.frame.width).isActive = true
+        intPurpose.widthAnchor.constraint(equalToConstant: self.view.frame.width/2 - 70).isActive = true
         intPurpose.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         //Column 2
         customerNameField.leftAnchor.constraint(equalTo: custName.rightAnchor, constant: 0).isActive = true
         customerNameField.topAnchor.constraint(equalTo: pfcField.bottomAnchor, constant: 0).isActive = true
-        customerNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2+20).isActive = true
+        customerNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         customerNameField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         projectNameField.leftAnchor.constraint(equalTo: projName.rightAnchor, constant: 0).isActive = true
         projectNameField.topAnchor.constraint(equalTo: customerNameField.bottomAnchor, constant: 0).isActive = true
-        projectNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2+40).isActive = true
+        projectNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         projectNameField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         ipcCriteriaField.leftAnchor.constraint(equalTo: ipcAccCrit.rightAnchor, constant: 0).isActive = true
@@ -395,12 +469,12 @@ class A4TemplateViewController: UIViewController {
         //Column3
         prodName.leftAnchor.constraint(equalTo: customerNameField.rightAnchor, constant: 0).isActive = true
         prodName.topAnchor.constraint(equalTo: pfcField.bottomAnchor, constant: 0).isActive = true
-        prodName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2 - 20).isActive = true
+        prodName.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         prodName.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         prodPartNo.leftAnchor.constraint(equalTo: projectNameField.rightAnchor, constant: 0).isActive = true
         prodPartNo.topAnchor.constraint(equalTo: prodName.bottomAnchor, constant: 0).isActive = true
-        prodPartNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-15).isActive = true
+        prodPartNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         prodPartNo.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         prodRevNo.leftAnchor.constraint(equalTo: ipcCriteriaField.rightAnchor, constant: 0).isActive = true
@@ -411,33 +485,33 @@ class A4TemplateViewController: UIViewController {
         //Column 4
         productNameField.leftAnchor.constraint(equalTo: prodName.rightAnchor, constant: 0).isActive = true
         productNameField.topAnchor.constraint(equalTo: rhos.bottomAnchor, constant: 0).isActive = true
-        productNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2+20+30).isActive = true
+        productNameField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         productNameField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         productPartNoField.leftAnchor.constraint(equalTo: prodPartNo.rightAnchor, constant: 0).isActive = true
         productPartNoField.topAnchor.constraint(equalTo: productNameField.bottomAnchor, constant: 0).isActive = true
-        productPartNoField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2+15+30).isActive = true
+        productPartNoField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         productPartNoField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         productRevNoField.leftAnchor.constraint(equalTo: prodRevNo.rightAnchor, constant: 0).isActive = true
         productRevNoField.topAnchor.constraint(equalTo: productPartNoField.bottomAnchor, constant: 0).isActive = true
-        productRevNoField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-15+30).isActive = true
+        productRevNoField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-15).isActive = true
         productRevNoField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         //Column 5
         pfdNo.leftAnchor.constraint(equalTo: productNameField.rightAnchor, constant: 0).isActive = true
         pfdNo.topAnchor.constraint(equalTo: issueNoField.bottomAnchor, constant: 0).isActive = true
-        pfdNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-30).isActive = true
+        pfdNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         pfdNo.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         pfdRevNo.leftAnchor.constraint(equalTo: productPartNoField.rightAnchor, constant: 0).isActive = true
         pfdRevNo.topAnchor.constraint(equalTo: pfdNo.bottomAnchor, constant: 0).isActive = true
-        pfdRevNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-30).isActive = true
+        pfdRevNo.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         pfdRevNo.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         revDate.leftAnchor.constraint(equalTo: productRevNoField.rightAnchor, constant: 0).isActive = true
         revDate.topAnchor.constraint(equalTo: pfdRevNo.bottomAnchor, constant: 0).isActive = true
-        revDate.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2-30).isActive = true
+        revDate.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         revDate.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         
@@ -457,26 +531,55 @@ class A4TemplateViewController: UIViewController {
         revDateField.widthAnchor.constraint(equalToConstant: self.view.frame.width/3/2).isActive = true
         revDateField.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
-        generateTemplate.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 100).isActive = true
+        
+        
+        intendedUseField.leftAnchor.constraint(equalTo: intPurpose.rightAnchor, constant: 0).isActive = true
+        intendedUseField.topAnchor.constraint(equalTo: productRevNoField.bottomAnchor, constant: 0).isActive = true
+        intendedUseField.widthAnchor.constraint(equalToConstant: self.view.frame.width/2 + 70).isActive = true
+        intendedUseField.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        notes.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: 0).isActive = true
+        notes.topAnchor.constraint(equalTo: intPurpose.bottomAnchor, constant: 0).isActive = true
+        notes.widthAnchor.constraint(equalToConstant: self.view.frame.width).isActive = true
+//        notes.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+//        generateTemplate.leftAnchor.constraint(equalTo: templateView.leftAnchor, constant: self.view.frame.width/2).isActive = true
+        generateTemplate.centerXAnchor.constraint(equalTo: templateView.centerXAnchor).isActive = true
         generateTemplate.topAnchor.constraint(equalTo: templateView.bottomAnchor, constant: 50).isActive = true
-        //        generateTemplate.widthAnchor.constraint(equalToConstant: ).isActive = true
-        //        generateTemplate.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        generateTemplate.widthAnchor.constraint(equalToConstant: 150).isActive = true
+        generateTemplate.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
+    
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        textField.borderStyle = .none
+        textField.backgroundColor = .white
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+            textView.layer.borderWidth = 0.0
+            textView.backgroundColor = .white
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        let fixedWidth = textView.frame.size.width
+        let newSize = textView.sizeThatFits(CGSize(width: fixedWidth, height: CGFloat.greatestFiniteMagnitude))
+        var newFrame = textView.frame
+        newFrame.size = CGSize(width: max(newSize.width, fixedWidth), height: newSize.height)
+        textView.frame = newFrame
+        textView.backgroundColor = .white
+    }
+    
     func loadDataDict(){
         
-        ffNoField.text = A4TemplateViewController.dataDict["FF"] ?? ""
-        issueNoField.text! = "ISSUE NO."
-        issueNoField.text! += A4TemplateViewController.dataDict["Issue No."] ?? ""
-        customerNameField.text! = A4TemplateViewController.dataDict["Customer Name"] ?? ""
-        projectNameField.text! = A4TemplateViewController.dataDict["Project Name"] ?? ""
-        ipcCriteriaField.text! = A4TemplateViewController.dataDict["IPC Acceptance Criteria"] ?? ""
-        productNameField.text! = A4TemplateViewController.dataDict["Product Name"] ?? ""
-        productPartNoField.text! = A4TemplateViewController.dataDict["Product Part No."] ?? ""
-        productRevNoField.text! = A4TemplateViewController.dataDict["Product Revision No."] ?? ""
-        pfdNoField.text! = A4TemplateViewController.dataDict["PFD No."] ?? ""
-        pfdRevNoField.text! = A4TemplateViewController.dataDict["PFD Rev No."] ?? ""
-        revDateField.text! = A4TemplateViewController.dataDict["Revision Date"] ?? ""
-        intendedUseField.text! = A4TemplateViewController.dataDict["Intended Use"] ?? ""
+        if A4TemplateViewController.fieldTexts.count == 0{
+            return
+        }
+        
+        for i in fields.indices {
+            fields[i].text = A4TemplateViewController.fieldTexts[i]
+        }
+        
+        notes.text = A4TemplateViewController.fieldTexts[A4TemplateViewController.fieldTexts.count-1]
     }
     
     func setupLooksGoodLayout()
@@ -489,6 +592,13 @@ class A4TemplateViewController: UIViewController {
     
     @objc func didClickLooksGood()
     {
+        A4TemplateViewController.fieldTexts = []
+        for field in fields
+        {
+            A4TemplateViewController.fieldTexts.append(field.text!)
+        }
+        
+        A4TemplateViewController.fieldTexts.append(notes.text!)
         dismiss(animated: true, completion: nil)
     }
     

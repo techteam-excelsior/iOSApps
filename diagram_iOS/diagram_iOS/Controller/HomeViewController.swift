@@ -65,7 +65,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        if count == 0 {
+        if count == 0
+        {
             let template = A4TemplateViewController()
             present(template, animated: true, completion: nil)
             self.jsonData = nil
@@ -347,7 +348,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
                 dropZone!.layer.addSublayer(arrowShape)
             }
         }
-        A4TemplateViewController.dataDict = allData.template
+        A4TemplateViewController.fieldTexts = allData.template
     }
     
     //    Generates unique ID for the shapes
@@ -721,9 +722,7 @@ extension HomeViewController: menuControllerDelegate
     
     }
     
-
-    func saveViewState() {
-
+    func saveIntoVariables(){
         let jsonEncoder = JSONEncoder()
         let allData = entireData()
         for view in data.views{
@@ -734,15 +733,21 @@ extension HomeViewController: menuControllerDelegate
             data.viewsAndData[view]?.height = Double(view.frame.height)
             allData.allViews.append(data.viewsAndData[view]!)
         }
-
+        
         for arrow in data.arrows{
             data.arrowsAndData[arrow]?.okText = arrow.okTextField.text ?? ""
             data.arrowsAndData[arrow]?.timeText = arrow.timeTextField.text ?? ""
             data.arrowsAndData[arrow]?.isExpanded = arrow.isExpanded
             allData.allArrows.append(data.arrowsAndData[arrow]!)
         }
-        allData.template = A4TemplateViewController.dataDict
+        allData.template = A4TemplateViewController.fieldTexts
         self.jsonData = try? jsonEncoder.encode(allData)
+
+    }
+
+    func saveViewState() {
+        
+        saveIntoVariables()
         
 //        let path = getURL(for: .Documents).appendingPathComponent(LandingPageViewController.projectName)
         let fileName = LandingPageViewController.projectName+".excelsior"
@@ -753,32 +758,6 @@ extension HomeViewController: menuControllerDelegate
     }
 
     func saveViewStateAsNew() {
-        
-        saveViewState()
-//        let jsonEncoder = JSONEncoder()
-//        let allData = entireData()
-//
-//        for view in data.views
-//        {
-//            data.viewsAndData[view]?.text = view.textView.text
-//            data.viewsAndData[view]?.x = Double(view.frame.origin.x)
-//            data.viewsAndData[view]?.y = Double(view.frame.origin.y)
-//            data.viewsAndData[view]?.width = Double(view.frame.width)
-//            data.viewsAndData[view]?.height = Double(view.frame.height)
-//            allData.allViews.append(data.viewsAndData[view]!)
-//        }
-//
-//        for arrow in data.arrows
-//        {
-//            data.arrowsAndData[arrow]?.okText = arrow.okTextField.text ?? ""
-//            data.arrowsAndData[arrow]?.timeText = arrow.timeTextField.text ?? ""
-//            data.arrowsAndData[arrow]?.isExpanded = arrow.isExpanded
-//            allData.allArrows.append(data.arrowsAndData[arrow]!)
-//        }
-//        allData.template = TemplateViewController.dataDict
-//        self.jsonData = try? jsonEncoder.encode(allData)
-        
-        
         
         let alert = UIAlertController(title: "Enter the name of the Project", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
@@ -794,6 +773,7 @@ extension HomeViewController: menuControllerDelegate
                 {
                     print("Directory successfully created!")
 //                    let path = self.getURL(for: .Documents).appendingPathComponent(LandingPageViewController.projectName)
+                    self.saveIntoVariables()
                     let fileName = LandingPageViewController.projectName+".excelsior"
                     if self.writeFile(containing: String(data: self.jsonData!, encoding: .utf8)!, to: self.getURL(for: .ProjectInShared), withName: fileName)
                     {
