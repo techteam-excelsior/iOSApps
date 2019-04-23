@@ -68,6 +68,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         if count == 0 {
             let template = A4TemplateViewController()
             present(template, animated: true, completion: nil)
+            self.jsonData = nil
+            self.oldjSONData = nil
         }
         count = 1
     }
@@ -289,6 +291,11 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             try? self.oldjSONData = Data(contentsOf: getURL(for: .ProjectInShared).appendingPathComponent(LandingPageViewController.projectName + ".excelsior"), options: .uncachedRead)
             print("Old Data restored")
         }
+        else
+        {
+            print("No old data present")
+            self.oldjSONData = nil
+        }
     }
     
     func load_action()
@@ -417,10 +424,6 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         if self.jsonData != nil, self.oldjSONData != nil, String(data: self.jsonData!, encoding: .utf8) == String(data: self.oldjSONData!, encoding: .utf8)
         {
             dismiss(animated: true)
-        }
-            
-        else if self.oldjSONData == nil, self.jsonData != nil {
-            dismiss(animated: true, completion: nil)
         }
             
         else
