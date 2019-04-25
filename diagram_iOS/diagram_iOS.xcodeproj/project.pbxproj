@@ -408,14 +408,14 @@
 				CODE_SIGN_ENTITLEMENTS = diagram_iOS/diagram_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NMTNB4V3B9;
+				DEVELOPMENT_TEAM = 5526WN6N65;
 				INFOPLIST_FILE = diagram_iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gaurav-pai.diagram-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.excelsiortechteam.diagram-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
@@ -430,14 +430,14 @@
 				CODE_SIGN_ENTITLEMENTS = diagram_iOS/diagram_iOS.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = NMTNB4V3B9;
+				DEVELOPMENT_TEAM = 5526WN6N65;
 				INFOPLIST_FILE = diagram_iOS/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.gaurav-pai.diagram-iOS";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.excelsiortechteam.diagram-iOS";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.2;
