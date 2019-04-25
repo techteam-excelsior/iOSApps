@@ -29,7 +29,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     private var isTimeSet = false
     private var countdownValue: Double?
     private var sliderButton = UIButton()
-    
+    static var pdfData: NSMutableData?
     //drop variables
     private let shapes = ["rectangle", "triangle", "circle", "rhombus"]
     private var dropZone: UIView!
@@ -712,7 +712,7 @@ extension UIViewController {
     }
 }
 
-extension HomeViewController: menuControllerDelegate
+extension HomeViewController: menuControllerDelegate, UIPopoverPresentationControllerDelegate
 {
     func moveToTrash() {
         
@@ -787,21 +787,36 @@ extension HomeViewController: menuControllerDelegate
     
     func takeScreenShot()
     {
-        self.gridView.isHidden = true
-        self.dropZone.exportAsImage()
-        self.showToast(message: "Screenshot captured!")
         self.gridView.isHidden = false
-
+        self.dropZone.exportAsImage(auxView: nil, attachBelow: false)
+        self.showToast(message: "Saved Screenshot Successfully")
+        self.gridView.isHidden = true
     }
     
     func exportAsPDF()
     {
-        self.gridView.isHidden = true
-        let imgPath = dropZone!.exportAsPdfFromView(name: LandingPageViewController.projectName)
-        print("\(imgPath)")
-        self.showToast(message: "PDF created successfully")
-        self.gridView.isHidden = false
+        self.gridView.removeFromSuperview()
+        let popoverVC = self.dropZone.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView:nil, attachBelow: false) as? PdfPreviewViewController
+        if (popoverVC != nil){
+            HomeViewController.pdfData = NSMutableData(data: popoverVC!.pdfData)
+            popoverVC?.delegate = self
+            popoverVC!.modalPresentationStyle = .popover
+            popoverVC!.preferredContentSize = CGSize(width: self.view.bounds.width*(2/3), height: self.view.bounds.height*(2/3))
+            if let popoverController = popoverVC!.popoverPresentationController {
+                popoverController.sourceView = self.view
+                popoverController.sourceRect = CGRect(x: 0, y: 0, width: self.view.bounds.width, height: self.view.bounds.height/6)
+                popoverController.permittedArrowDirections = .any
+                popoverController.delegate = self
+                popoverVC!.delegate = self
+            }
+            present(popoverVC!, animated: true, completion: nil)
+        }
+        
+        self.gridView = GridView(frame : dropZone!.frame)
+        self.gridView.backgroundColor = UIColor.clear
+        self.gridView.isUserInteractionEnabled = false
 
+        self.dropZone!.addSubview(gridView)
     }
 }
     

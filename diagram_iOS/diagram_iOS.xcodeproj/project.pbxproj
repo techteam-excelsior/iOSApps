@@ -32,6 +32,7 @@
 		3FC956822244C44100FF31B2 /* ShapeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC9567B2244C44100FF31B2 /* ShapeCell.swift */; };
 		3FC956842244C44A00FF31B2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC956832244C44A00FF31B2 /* Protocols.swift */; };
 		3FD481AE2261A5C100E176E0 /* TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */; };
+		59FDCE1722701BF100475B2C /* PdfPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FDCE1622701BF100475B2C /* PdfPreviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -63,6 +64,7 @@
 		3FC9567B2244C44100FF31B2 /* ShapeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeCell.swift; sourceTree = "<group>"; };
 		3FC956832244C44A00FF31B2 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewController.swift; sourceTree = "<group>"; };
+		59FDCE1622701BF100475B2C /* PdfPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPreviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,6 +140,7 @@
 				3FC956672244C42C00FF31B2 /* MenuViewController.swift */,
 				3FC956662244C42C00FF31B2 /* SlideViewController.swift */,
 				3F0BF9722251E78E0039BB6D /* LandingPageViewController.swift */,
+				59FDCE1622701BF100475B2C /* PdfPreviewViewController.swift */,
 				3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */,
 				3F139A53226B01F000B1736F /* a4TemplateViewController.swift */,
 			);
@@ -246,6 +249,7 @@
 				3FC9567D2244C44100FF31B2 /* PDFExtension.swift in Sources */,
 				3FC9566E2244C42C00FF31B2 /* ContainerViewController.swift in Sources */,
 				3F139A54226B01F000B1736F /* a4TemplateViewController.swift in Sources */,
+				59FDCE1722701BF100475B2C /* PdfPreviewViewController.swift in Sources */,
 				3F15B8112259D98B00901805 /* arrow3.swift in Sources */,
 				3F0BF9732251E78E0039BB6D /* LandingPageViewController.swift in Sources */,
 				3FC956812244C44100FF31B2 /* CircleView.swift in Sources */,
