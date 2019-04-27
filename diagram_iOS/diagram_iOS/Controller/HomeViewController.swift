@@ -789,8 +789,8 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func takeScreenShot()
     {
-        self.gridView.isHidden = false
-        self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: false)
+        self.gridView.isHidden = true
+        self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: true)
         self.showToast(message: "Saved Screenshot Successfully")
         self.gridView.isHidden = true
     }
@@ -798,7 +798,7 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     func copyView(viewforCopy: UIView) -> UIView {
         viewforCopy.isHidden = false //The copy not works if is hidden, just prevention
         let viewCopy = viewforCopy.snapshotView(afterScreenUpdates: true)
-        viewforCopy.isHidden = true
+        viewforCopy.isHidden = false
         return viewCopy!
     }
     
@@ -806,15 +806,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     {
         self.gridView.removeFromSuperview()
 //        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
-        let temp = template?.templateView
-        template?.templateView.removeFromSuperview()
-        self.dropZone.addSubview(template!.templateView)
-        template!.templateView.leftAnchor.constraint(equalTo: dropZone.leftAnchor, constant: 0).isActive = true
-        template!.templateView.topAnchor.constraint(equalTo: dropZone.topAnchor, constant: 100).isActive = true
-        template!.templateView.widthAnchor.constraint(equalToConstant: 1000).isActive = true
-        template!.templateView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        
         self.template?.templateView.backgroundColor = .orange
-        let popoverVC = self.dropZone.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView:nil, attachBelow: nil) as? PdfPreviewViewController
+        
+        let popoverVC = self.template?.templateView.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView: self.dropZone, attachBelow: true) as? PdfPreviewViewController
         
         if (popoverVC != nil){
             HomeViewController.pdfData = NSMutableData(data: popoverVC!.pdfData)
@@ -834,8 +829,8 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
         self.gridView = GridView(frame : dropZone!.frame)
         self.gridView.backgroundColor = UIColor.clear
         self.gridView.isUserInteractionEnabled = false
-
         self.dropZone!.addSubview(gridView)
+        self.dropZone.sendSubviewToBack(gridView)
     }
     
     func setTemplate(){
