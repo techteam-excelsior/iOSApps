@@ -24,7 +24,7 @@ protocol menuControllerDelegate {
     func exportAsPDF()
     func moveToTrash()
     func listTrashItems()
-    
+    func setTemplate()
 }
  // end protocol AppDirectoryNames
 

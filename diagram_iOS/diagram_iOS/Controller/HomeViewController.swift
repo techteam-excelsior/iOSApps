@@ -52,6 +52,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     var oldjSONData : Data?
     static var uniqueProcessID = 0
     var count = 0
+    var template : A4TemplateViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,8 +68,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     override func viewDidAppear(_ animated: Bool) {
         if count == 0
         {
-            let template = A4TemplateViewController()
-            present(template, animated: true, completion: nil)
+            self.template = A4TemplateViewController()
+            present(self.template!, animated: true, completion: nil)
             self.jsonData = nil
             self.oldjSONData = nil
         }
@@ -137,9 +138,10 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         
         self.scrollView?.delegate = self
         
-        self.scrollView!.contentSize = CGSize(width: self.view.frame.width.rounded(to: 50) * 3, height: self.view.frame.height.rounded(to: 50) * 3)
-        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width.rounded(to: 50) * 3, height: self.view.frame.height.rounded(to: 50) * 3))
+        self.scrollView!.contentSize = CGSize(width: self.view.frame.width.rounded(to: 50), height: self.view.frame.height.rounded(to: 50))
+        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width.rounded(to: 50), height: self.view.frame.height.rounded(to: 50)))
         self.scrollView!.addSubview(dropZone!)
+//        resizeDropZone()
         self.dropZone!.backgroundColor = UIColor.white
         self.scrollView?.canCancelContentTouches = false
         //set appropriate zoom scale for the scroll view
@@ -788,15 +790,32 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     func takeScreenShot()
     {
         self.gridView.isHidden = false
-        self.dropZone.exportAsImage(auxView: nil, attachBelow: false)
+        self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: false)
         self.showToast(message: "Saved Screenshot Successfully")
         self.gridView.isHidden = true
+    }
+    
+    func copyView(viewforCopy: UIView) -> UIView {
+        viewforCopy.isHidden = false //The copy not works if is hidden, just prevention
+        let viewCopy = viewforCopy.snapshotView(afterScreenUpdates: true)
+        viewforCopy.isHidden = true
+        return viewCopy!
     }
     
     func exportAsPDF()
     {
         self.gridView.removeFromSuperview()
-        let popoverVC = self.dropZone.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView:nil, attachBelow: false) as? PdfPreviewViewController
+//        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
+        let temp = template?.templateView
+        template?.templateView.removeFromSuperview()
+        self.dropZone.addSubview(template!.templateView)
+        template!.templateView.leftAnchor.constraint(equalTo: dropZone.leftAnchor, constant: 0).isActive = true
+        template!.templateView.topAnchor.constraint(equalTo: dropZone.topAnchor, constant: 100).isActive = true
+        template!.templateView.widthAnchor.constraint(equalToConstant: 1000).isActive = true
+        template!.templateView.heightAnchor.constraint(equalToConstant: 300).isActive = true
+        self.template?.templateView.backgroundColor = .orange
+        let popoverVC = self.dropZone.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView:nil, attachBelow: nil) as? PdfPreviewViewController
+        
         if (popoverVC != nil){
             HomeViewController.pdfData = NSMutableData(data: popoverVC!.pdfData)
             popoverVC?.delegate = self
@@ -811,12 +830,20 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
             }
             present(popoverVC!, animated: true, completion: nil)
         }
-        
+//        self.template?.view.addSubview(template!.templateView)
         self.gridView = GridView(frame : dropZone!.frame)
         self.gridView.backgroundColor = UIColor.clear
         self.gridView.isUserInteractionEnabled = false
 
         self.dropZone!.addSubview(gridView)
+    }
+    
+    func setTemplate(){
+
+        if self.template == nil{
+            self.template = A4TemplateViewController()
+        }
+        self.navigationController?.pushViewController(self.template!, animated: true)
     }
 }
     
