@@ -69,7 +69,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         if count == 0
         {
             self.template = A4TemplateViewController()
-            present(self.template!, animated: true, completion: nil)
+            self.navigationController?.pushViewController(self.template!, animated: true)
             self.jsonData = nil
             self.oldjSONData = nil
         }
@@ -138,8 +138,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         
         self.scrollView?.delegate = self
         
-        self.scrollView!.contentSize = CGSize(width: self.view.frame.width.rounded(to: 50), height: self.view.frame.height.rounded(to: 50))
-        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width.rounded(to: 50), height: self.view.frame.height.rounded(to: 50)))
+        self.scrollView!.contentSize = CGSize(width: (self.view.frame.width + 500).rounded(to: 50), height: (self.view.frame.height + 500).rounded(to: 50))
+        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: (self.view.frame.width + 500).rounded(to: 50), height: (self.view.frame.height + 500).rounded(to: 50)))
         self.scrollView!.addSubview(dropZone!)
 //        resizeDropZone()
         self.dropZone!.backgroundColor = UIColor.white

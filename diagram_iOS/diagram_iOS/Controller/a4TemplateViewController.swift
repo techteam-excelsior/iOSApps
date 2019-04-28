@@ -318,7 +318,7 @@ class A4TemplateViewController: UIViewController, UITextFieldDelegate, UITextVie
 //        textDict[revDateField] = "Revision Date"
 //        textDict[intendedUseField] = "Intended Use"
 
-        
+        navigationItem.title = "Template"
         
         
         loadDataDict()
@@ -599,7 +599,8 @@ class A4TemplateViewController: UIViewController, UITextFieldDelegate, UITextVie
         }
         
         A4TemplateViewController.fieldTexts.append(notes.text!)
-        dismiss(animated: true, completion: nil)
+        
+        self.navigationController?.popViewController(animated: true)
     }
     
     
