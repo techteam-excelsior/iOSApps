@@ -53,19 +53,36 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     static var uniqueProcessID = 0
     var count = 0
     var template : A4TemplateViewController?
+    var slideViewController : SlideViewController?
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
         self.scrollView?.delegate = self
         ContainerViewController.menuDelegate = self
+        configureScrollView()
+        configureSlider()
         load_action()
     }
+    
+//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//        print("Transitioning into size: ",size)
+//
+//        height = UIScreen.main.bounds.height
+//        width = UIScreen.main.bounds.width
+//        self.scrollView?.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
+//        self.slideViewController?.removeFromParent()
+//        self.slideView.removeFromSuperview()
+//        configureSlider()
+//    }
     
     override func viewDidLayoutSubviews() {
         height = UIScreen.main.bounds.height
         width = UIScreen.main.bounds.width
-        configureScrollView()
+        self.scrollView?.frame = CGRect(x: 0, y: 0, width: width, height: height)
+        self.slideViewController?.removeFromParent()
+        self.slideView.removeFromSuperview()
         configureSlider()
     }
     
@@ -104,13 +121,14 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     
     //Creating the slider and applying Pan gesture to it
     func configureSlider(){
-        let slideViewController = SlideViewController()
-        addChild(slideViewController)
-        slideViewController.didMove(toParent: self)
-        slideViewController.view.frame = CGRect(x: 0, y: height - 55, width: width, height: height/3)
+        print("Width and Height in slider: ",width, height)
+        slideViewController = SlideViewController()
+        addChild(slideViewController!)
+        slideViewController!.didMove(toParent: self)
+        slideViewController!.view.frame = CGRect(x: 0, y: height - 55, width: width, height: height/3)
         //slideViewController.view.backgroundColor = UIColor.lightGray
-        view.addSubview(slideViewController.view)
-        slideView = slideViewController.view
+        view.addSubview(slideViewController!.view)
+        slideView = slideViewController!.view
         
         sliderButton.setImage(#imageLiteral(resourceName: "up"), for: .normal)
         
