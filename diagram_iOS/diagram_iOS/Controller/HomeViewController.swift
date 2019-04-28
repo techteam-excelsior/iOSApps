@@ -24,8 +24,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     private var sliderDown: CGPoint!
     private var sliderCenter: CGPoint!
     private var slideView : UIView!
-    private let height = UIScreen.main.bounds.height
-    private let width = UIScreen.main.bounds.width
+    private var height = UIScreen.main.bounds.height
+    private var width = UIScreen.main.bounds.width
     private var isTimeSet = false
     private var countdownValue: Double?
     private var sliderButton = UIButton()
@@ -55,13 +55,17 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureScrollView()
         configureNavigationBar()
-        configureSlider()
         self.scrollView?.delegate = self
         ContainerViewController.menuDelegate = self
-        // Do any additional setup after loading the view
         load_action()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        height = UIScreen.main.bounds.height
+        width = UIScreen.main.bounds.width
+        configureScrollView()
+        configureSlider()
     }
     
     override func viewDidAppear(_ animated: Bool) {
