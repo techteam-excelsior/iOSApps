@@ -178,7 +178,7 @@ extension BottleneckViewController: UITableViewDelegate, UITableViewDataSource
         
         let menuOption = bottleneckFiles.FilesArray[indexPath.row]
         cell.processName.text = menuOption.0
-        cell.outputCount.text = String(menuOption.1)
+        cell.outputCount.text = String(menuOption.1).removeExtraSpaces()
         return cell
     }
 }

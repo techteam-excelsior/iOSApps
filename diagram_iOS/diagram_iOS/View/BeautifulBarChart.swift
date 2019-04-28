@@ -13,7 +13,7 @@ class BeautifulBarChart: UIView {
     let barWidth: CGFloat = 140.0
     
     /// Reserved space to show text below each bar
-    private let bottomSpace: CGFloat = 40.0
+    private let bottomSpace: CGFloat = 80.0
     
     /// Reserved space to show value (or height) of the bar
     private let topSpace: CGFloat = 100
@@ -175,20 +175,25 @@ class BeautifulBarChart: UIView {
         textLayer.contentsScale = UIScreen.main.scale
         textLayer.font = CTFontCreateWithName(UIFont.systemFont(ofSize: 0).fontName as CFString, 0, nil)
         textLayer.fontSize = 14
+        
         textLayer.string = textValue
         mainLayer.addSublayer(textLayer)
     }
     
     private func drawTitle(xPos: CGFloat, yPos: CGFloat, title: String, color: UIColor) {
         let textLayer = CATextLayer()
-        textLayer.frame = CGRect(x: xPos, y: yPos, width: barWidth, height: 22)
+        textLayer.frame = CGRect(x: xPos, y: yPos, width: barWidth, height: 62)
         textLayer.foregroundColor = color.cgColor
         textLayer.backgroundColor = UIColor.clear.cgColor
         textLayer.alignmentMode = CATextLayerAlignmentMode.center
         textLayer.contentsScale = UIScreen.main.scale
         textLayer.font = CTFontCreateWithName(UIFont.systemFont(ofSize: 0).fontName as CFString, 0, nil)
         textLayer.fontSize = 14
-        textLayer.string = title
+        var newTitle = title.removeExtraSpaces()
+        newTitle = newTitle.replacingOccurrences(of: " ", with: "\n")
+        textLayer.string = newTitle
+        print(title)
+        print(newTitle)
         mainLayer.addSublayer(textLayer)
     }
     
@@ -208,5 +213,11 @@ class BeautifulBarChart: UIView {
         topCircle.backgroundColor = color.cgColor
         topCircle.cornerRadius = 3.0
         mainLayer.addSublayer(topCircle)
+    }
+}
+
+extension String {
+    func removeExtraSpaces() -> String {
+    return self.replacingOccurrences(of: "[\\s\n]+", with: " ", options: .regularExpression, range: nil)
     }
 }

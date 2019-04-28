@@ -100,17 +100,17 @@ extension AppDirectoryNames
     
     func sharedDirectoryURL() -> URL?
     {
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsior")
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsiortechteam")
     }
     
     func applicationInSharedDirectoryURL() -> URL?
     {
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsior")?.appendingPathComponent(LandingPageViewController.applicationName)
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsiortechteam")?.appendingPathComponent(LandingPageViewController.applicationName)
     }
     
     func projectInSharedDirectoryURL() -> URL?
     {
-        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsior")?.appendingPathComponent(LandingPageViewController.applicationName).appendingPathComponent(LandingPageViewController.projectName)
+        return FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.excelsiortechteam")?.appendingPathComponent(LandingPageViewController.applicationName).appendingPathComponent(LandingPageViewController.projectName)
     }
     func getURL(for directory: AppDirectories) -> URL
     {

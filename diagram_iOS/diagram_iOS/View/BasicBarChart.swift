@@ -17,7 +17,7 @@ class BasicBarChart: UIView {
     let space: CGFloat = 50.0
     
     /// space at the bottom of the bar to show the title
-    private let bottomSpace: CGFloat = 40.0
+    private let bottomSpace: CGFloat = 80.0
     
     /// space at the top of each bar to show the value
     private let topSpace: CGFloat = 40.0
@@ -137,14 +137,16 @@ class BasicBarChart: UIView {
     private func drawTitle(xPos: CGFloat, yPos: CGFloat, title: String, color: UIColor) {
         let textLayer = CATextLayer()
         textLayer.contentsScale = 8
-        textLayer.frame = CGRect(x: xPos, y: yPos, width: barWidth + space, height: 22)
+        textLayer.frame = CGRect(x: xPos, y: yPos, width: barWidth + space, height: 62)
         textLayer.foregroundColor = color.cgColor
         textLayer.backgroundColor = UIColor.clear.cgColor
         textLayer.alignmentMode = CATextLayerAlignmentMode.center
         textLayer.contentsScale = UIScreen.main.scale
         textLayer.font = CTFontCreateWithName(UIFont.systemFont(ofSize: 0).fontName as CFString, 0, nil)
         textLayer.fontSize = 14
-        textLayer.string = title
+        var newTitle = title.removeExtraSpaces()
+        newTitle = newTitle.replacingOccurrences(of: " ", with: "\n")
+        textLayer.string = newTitle
         mainLayer.addSublayer(textLayer)
     }
     
