@@ -792,15 +792,9 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
         self.gridView.isHidden = true
         self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: true)
         self.showToast(message: "Saved Screenshot Successfully")
-        self.gridView.isHidden = true
+        self.gridView.isHidden = false
     }
     
-    func copyView(viewforCopy: UIView) -> UIView {
-        viewforCopy.isHidden = false //The copy not works if is hidden, just prevention
-        let viewCopy = viewforCopy.snapshotView(afterScreenUpdates: true)
-        viewforCopy.isHidden = false
-        return viewCopy!
-    }
     
     func exportAsPDF()
     {
