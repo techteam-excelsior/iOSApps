@@ -12,6 +12,15 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     var shape: String?
     
+    class VerticallyCenteredTextView: UITextView {
+        override var contentSize: CGSize {
+            didSet {
+                var topCorrection = (bounds.size.height - contentSize.height * zoomScale) / 2.0
+                topCorrection = max(0, topCorrection)
+                contentInset = UIEdgeInsets(top: topCorrection, left: 0, bottom: 0, right: 0)
+            }
+        }
+    }
     
     
     
@@ -23,7 +32,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     var isResizingLL = false
     var touchStart = CGPoint.zero
     let borderlayer = CAShapeLayer()
-    let textView = UITextView()
+    let textView = VerticallyCenteredTextView()
 //    let textLabel = UITextField()
     var circles = [CircleView]()
     var delete : CircleView?
@@ -162,12 +171,11 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     
     
-    
-    
+   
     func createTextView(text: String) {
         
         textView.text = text
-        textView.frame = CGRect(x: 0.0, y: self.frame.size.height/2 - 20.0, width: self.frame.size.width, height: 40.0)
+        textView.frame = CGRect(x: 0.0, y: 0.0, width: self.frame.size.width, height: 80.0)
         textView.frame = textView.frame.integral
         //        textView.frame = CGRect(x: 20.0, y: 20.0, width: self.bounds.size.width - 20, height: self.bounds.size.height - 20.0)
         textView.textAlignment = NSTextAlignment.center
@@ -184,8 +192,10 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         textView.delegate = self
         textView.layer.contentsScale = 10
         self.addSubview(textView)
+
         
     }
+    
     
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == "Insert Text"{

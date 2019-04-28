@@ -52,6 +52,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     var oldjSONData : Data?
     static var uniqueProcessID = 0
     var count = 0
+    var template : A4TemplateViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,8 +72,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     override func viewDidAppear(_ animated: Bool) {
         if count == 0
         {
-            let template = A4TemplateViewController()
-            present(template, animated: true, completion: nil)
+            self.template = A4TemplateViewController()
+            self.navigationController?.pushViewController(self.template!, animated: true)
             self.jsonData = nil
             self.oldjSONData = nil
         }
@@ -141,9 +142,10 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         
         self.scrollView?.delegate = self
         
-        self.scrollView!.contentSize = CGSize(width: self.view.frame.width.rounded(to: 50) * 3, height: self.view.frame.height.rounded(to: 50) * 3)
-        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width.rounded(to: 50) * 3, height: self.view.frame.height.rounded(to: 50) * 3))
+        self.scrollView!.contentSize = CGSize(width: (self.view.frame.width + 500).rounded(to: 50), height: (self.view.frame.height + 500).rounded(to: 50))
+        self.dropZone = UIView(frame: CGRect(x: 0, y: 0, width: (self.view.frame.width + 500).rounded(to: 50), height: (self.view.frame.height + 500).rounded(to: 50)))
         self.scrollView!.addSubview(dropZone!)
+//        resizeDropZone()
         self.dropZone!.backgroundColor = UIColor.white
         self.scrollView?.canCancelContentTouches = false
         //set appropriate zoom scale for the scroll view
@@ -791,16 +793,22 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func takeScreenShot()
     {
-        self.gridView.isHidden = false
-        self.dropZone.exportAsImage(auxView: nil, attachBelow: false)
-        self.showToast(message: "Saved Screenshot Successfully")
         self.gridView.isHidden = true
+        self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: true)
+        self.showToast(message: "Saved Screenshot Successfully")
+        self.gridView.isHidden = false
     }
+    
     
     func exportAsPDF()
     {
         self.gridView.removeFromSuperview()
-        let popoverVC = self.dropZone.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView:nil, attachBelow: false) as? PdfPreviewViewController
+//        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
+        
+        self.template?.templateView.backgroundColor = .orange
+        
+        let popoverVC = self.template?.templateView.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView: self.dropZone, attachBelow: true) as? PdfPreviewViewController
+        
         if (popoverVC != nil){
             HomeViewController.pdfData = NSMutableData(data: popoverVC!.pdfData)
             popoverVC?.delegate = self
@@ -815,12 +823,20 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
             }
             present(popoverVC!, animated: true, completion: nil)
         }
-        
+//        self.template?.view.addSubview(template!.templateView)
         self.gridView = GridView(frame : dropZone!.frame)
         self.gridView.backgroundColor = UIColor.clear
         self.gridView.isUserInteractionEnabled = false
-
         self.dropZone!.addSubview(gridView)
+        self.dropZone.sendSubviewToBack(gridView)
+    }
+    
+    func setTemplate(){
+
+        if self.template == nil{
+            self.template = A4TemplateViewController()
+        }
+        self.navigationController?.pushViewController(self.template!, animated: true)
     }
 }
     
