@@ -54,7 +54,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     var count = 0
     var template : A4TemplateViewController?
     var slideViewController : SlideViewController?
-    
+    private var isDeleted = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -443,6 +443,9 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     // MARK:- Gesture Handlers
     
     @objc func didClickExit(){
+        if self.isDeleted{
+            dismiss(animated: true, completion: nil)
+        }
         
         checkForChanges()
         
@@ -739,6 +742,32 @@ extension UIViewController {
 extension HomeViewController: menuControllerDelegate, UIPopoverPresentationControllerDelegate
 {
     func moveToTrash() {
+        let alert = UIAlertController(title: "Are you sure you want to Delete the Project? It cannot be recovered as of now", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
+//            let path = self.getURL(for: .Library).appendingPathComponent("Trash")
+//            if !self.exists(file: path){
+//                if !self.createDirectory(at: .Library, withName: "Trash"){
+//                    self.showToast(message: "Cannot create Trash folder")
+//                    return
+//                }
+//            }
+//            if !self.moveFolder(from: self.getURL(for: .ProjectInShared), to: path.appendingPathComponent(LandingPageViewController.projectName)){
+//                self.showToast(message: "Cannot move to Trash")
+//                return
+//            }
+            self.deleteFolder(at: self.getURL(for: .ProjectInShared))
+            self.deleteFolder(at: self.getURL(for: .Project))
+            self.isDeleted = true
+            self.showToast(message: "Project deleted successfully")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { // Change `2.0` to the desired number of seconds.
+                self.dismiss(animated: true, completion: nil)
+            }
+            
+        }))
+        
+        self.present(alert, animated: true)
+        
         
     }
     
@@ -770,7 +799,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     }
 
     func saveViewState() {
-        
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         saveIntoVariables()
         
 //        let path = getURL(for: .Documents).appendingPathComponent(LandingPageViewController.projectName)
@@ -782,7 +814,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     }
 
     func saveViewStateAsNew() {
-        
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         let alert = UIAlertController(title: "Enter the name of the Project", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addTextField(configurationHandler: { textField in
@@ -811,6 +846,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func takeScreenShot()
     {
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         self.gridView.isHidden = true
         self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: true)
         self.showToast(message: "Saved Screenshot Successfully")
@@ -820,6 +859,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func exportAsPDF()
     {
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         self.gridView.removeFromSuperview()
 //        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
         
