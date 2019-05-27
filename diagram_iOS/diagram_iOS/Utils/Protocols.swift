@@ -25,6 +25,7 @@ protocol menuControllerDelegate {
     func moveToTrash()
     func listTrashItems()
     func setTemplate()
+    func enableGroupSelect()
 }
  // end protocol AppDirectoryNames
 

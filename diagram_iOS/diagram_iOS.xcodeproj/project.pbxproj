@@ -32,6 +32,7 @@
 		3FC956822244C44100FF31B2 /* ShapeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC9567B2244C44100FF31B2 /* ShapeCell.swift */; };
 		3FC956842244C44A00FF31B2 /* Protocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FC956832244C44A00FF31B2 /* Protocols.swift */; };
 		3FD481AE2261A5C100E176E0 /* TemplateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */; };
+		59EB963F229B7844006F3DE5 /* ResizableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59EB963E229B7844006F3DE5 /* ResizableView.swift */; };
 		59FDCE1722701BF100475B2C /* PdfPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59FDCE1622701BF100475B2C /* PdfPreviewViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -64,6 +65,7 @@
 		3FC9567B2244C44100FF31B2 /* ShapeCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeCell.swift; sourceTree = "<group>"; };
 		3FC956832244C44A00FF31B2 /* Protocols.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Protocols.swift; sourceTree = "<group>"; };
 		3FD481AD2261A5C100E176E0 /* TemplateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateViewController.swift; sourceTree = "<group>"; };
+		59EB963E229B7844006F3DE5 /* ResizableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResizableView.swift; sourceTree = "<group>"; };
 		59FDCE1622701BF100475B2C /* PdfPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PdfPreviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -152,6 +154,7 @@
 			children = (
 				3FC956772244C44100FF31B2 /* Arrow.swift */,
 				3FC9567A2244C44100FF31B2 /* CircleView.swift */,
+				59EB963E229B7844006F3DE5 /* ResizableView.swift */,
 				3F15B80B2259D98B00901805 /* arrow3.swift */,
 				3F15B8082259D98B00901805 /* ArrowShape.swift */,
 				3F15B8072259D98B00901805 /* GridView.swift */,
@@ -239,6 +242,7 @@
 			files = (
 				3FBD80332261B59B00BFF020 /* TemplateModel.swift in Sources */,
 				3FC9566B2244C42C00FF31B2 /* SlideViewController.swift in Sources */,
+				59EB963F229B7844006F3DE5 /* ResizableView.swift in Sources */,
 				3FC9567C2244C44100FF31B2 /* ProcessModel.swift in Sources */,
 				3FC956842244C44A00FF31B2 /* Protocols.swift in Sources */,
 				3F15B80D2259D98B00901805 /* GridView.swift in Sources */,

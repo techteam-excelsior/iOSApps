@@ -128,6 +128,8 @@ class ContainerViewController: UIViewController {
             ContainerViewController.menuDelegate!.listTrashItems()
         case .SetTemplate:
             ContainerViewController.menuDelegate!.setTemplate()
+        case .groupSelect:
+            ContainerViewController.menuDelegate!.enableGroupSelect()
         }
     }
     
