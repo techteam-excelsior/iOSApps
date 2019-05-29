@@ -54,6 +54,17 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     var count = 0
     var template : A4TemplateViewController?
     var slideViewController : SlideViewController?
+    private var isDeleted = false
+    
+    static var isGroup = false
+    
+    static var selectedCount = UILabel()
+    
+    static var selectedViews : [processView] = []{
+        didSet{
+            selectedCount.text = "\(selectedViews.count) Selected"
+        }
+    }
     
     
     override func viewDidLoad() {
@@ -64,6 +75,15 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         configureScrollView()
         configureSlider()
         load_action()
+
+        self.view.addSubview(HomeViewController.selectedCount)
+        
+        HomeViewController.selectedCount.frame = CGRect(x: self.view.bounds.width/2 - 50, y: 200, width: 100, height: 50)
+        self.view.addSubview(HomeViewController.selectedCount)
+        HomeViewController.selectedCount.textAlignment = .center
+        HomeViewController.selectedCount.backgroundColor = .lightGray
+        HomeViewController.selectedCount.isHidden = true
+    
     }
     
     override func viewDidLayoutSubviews() {
@@ -73,6 +93,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         self.slideViewController?.removeFromParent()
         self.slideView.removeFromSuperview()
         configureSlider()
+        HomeViewController.selectedCount.frame = CGRect(x: self.view.bounds.width/2 - 50, y: 100, width: 100, height: 50)
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -397,6 +418,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             circle.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(circlegesture)))
         }
         demoView.delete?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(deletegesture)))
+        demoView.duplicate?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(duplicategesture)))
         
         data.viewsAndData[demoView] = uiViewData(x: Double(x), y: Double(y), width: Double(width), height: Double(height), shape: shape, text: demoView.textView.text, id: id, leftID: IDs[0], topID: IDs[1], rightID: IDs[2], bottomID: IDs[3])
         data.idAndAny[id] = demoView
@@ -432,6 +454,9 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     // MARK:- Gesture Handlers
     
     @objc func didClickExit(){
+        if self.isDeleted{
+            dismiss(animated: true, completion: nil)
+        }
         
         checkForChanges()
         
@@ -551,6 +576,30 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     
     @objc func deletegesture(_ sender: UITapGestureRecognizer){
         
+        if HomeViewController.isGroup{
+            let alert = UIAlertController(title: "Are you sure you want to delete selected item?", message: nil, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
+                for view in HomeViewController.selectedViews{
+                    for circle in (view.circles){
+                        circle.removeFromSuperview()
+                    }
+                    data.views.removeObjFromArray(object: view)
+                    let Viewdata = data.viewsAndData[view]
+                    //            idAndView.removeValue(forKey: Viewdata!.id)
+                    data.idAndAny.removeValue(forKey: (Viewdata?.id)!)
+                    data.viewsAndData.removeValue(forKey: view)
+                    view.delete?.removeFromSuperview()
+                    view.duplicate?.removeFromSuperview()
+                    view.removeFromSuperview()
+                }
+                HomeViewController.selectedViews = []
+            }))
+            
+            self.present(alert, animated: true)
+            return
+        }
+        
         print("print delete")
         let del = sender.view as! CircleView?
         if del?.myView != nil{
@@ -565,7 +614,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             //            idAndView.removeValue(forKey: Viewdata!.id)
             data.idAndAny.removeValue(forKey: (Viewdata?.id)!)
             data.viewsAndData.removeValue(forKey: (del?.myView)!)
-            
+            del?.myView?.duplicate?.removeFromSuperview()
             del?.myView?.removeFromSuperview()
             del?.removeFromSuperview()
         }
@@ -583,38 +632,47 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         
     }
     
+    @objc func duplicategesture(_ sender: UITapGestureRecognizer){
+        let duplicate = sender.view as! CircleView?
+        let srcView = (duplicate!.myView)!
+        self.add_a_shape(shape: srcView.shape!, x: srcView.frame.minX + 50, y: srcView.frame.minY + 50, width: srcView.frame.width, height: srcView.frame.height, withID: self.getUniqueID(), withText: srcView.textView.text, withCircleID: [self.getUniqueID(), self.getUniqueID(), self.getUniqueID(), self.getUniqueID()])
+    }
+    
     //gesture to recognize tap in dropZone which contains all the diagrams
     @objc func singleTap(_ sender: UITapGestureRecognizer) {
-        if firstCircle == nil{
-            disable_all()
+        if !HomeViewController.isGroup{
+            if firstCircle == nil{
+                disable_all()
+            }
+            
+            firstCircle?.hasConnection = false
+            firstCircle?.isHidden = false
+            firstCircle = nil
+            print("touches in viewcontroller")
+            UIView.animate(withDuration: 0.2, animations: { () -> Void in self.slideView.center = self.sliderDown})
+            sliderUpIndicator = false
+            let transform = CGAffineTransform(rotationAngle: 0)
+            UIView.animate(withDuration: 0.3) {
+                self.sliderButton.transform = transform
+            }
         }
-        
-        firstCircle?.hasConnection = false
-        firstCircle?.isHidden = false
-        firstCircle = nil
-        print("touches in viewcontroller")
-        UIView.animate(withDuration: 0.2, animations: { () -> Void in self.slideView.center = self.sliderDown})
-        sliderUpIndicator = false
-        let transform = CGAffineTransform(rotationAngle: 0)
-        UIView.animate(withDuration: 0.3) {
-            self.sliderButton.transform = transform
-        }
-        
     }
     
     @objc func doubleTap(_ sender: UITapGestureRecognizer) {
-        let tapLocation:CGPoint = sender.location(in: dropZone)
-        if let sublayers = dropZone!.layer.sublayers {
-            for layer in sublayers {
-                if let temp = layer as? ArrowShape{
-                    if (temp.path?.contains(tapLocation))!{
-                        print("touched arrow")
-                        //temp.updateViews(withPoint: tapLocation)
-                        if temp.viewsHidden{
-                            temp.enable_resize()
-                        }
-                        else{
-                            temp.disable_resize()
+        if !HomeViewController.isGroup{
+            let tapLocation:CGPoint = sender.location(in: dropZone)
+            if let sublayers = dropZone!.layer.sublayers {
+                for layer in sublayers {
+                    if let temp = layer as? ArrowShape{
+                        if (temp.path?.contains(tapLocation))!{
+                            print("touched arrow")
+                            //temp.updateViews(withPoint: tapLocation)
+                            if temp.viewsHidden{
+                                temp.enable_resize()
+                            }
+                            else{
+                                temp.disable_resize()
+                            }
                         }
                     }
                 }
@@ -728,6 +786,32 @@ extension UIViewController {
 extension HomeViewController: menuControllerDelegate, UIPopoverPresentationControllerDelegate
 {
     func moveToTrash() {
+        let alert = UIAlertController(title: "Are you sure you want to Delete the Project? It cannot be recovered as of now", message: nil, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Yes", style: .destructive, handler: { action in
+//            let path = self.getURL(for: .Library).appendingPathComponent("Trash")
+//            if !self.exists(file: path){
+//                if !self.createDirectory(at: .Library, withName: "Trash"){
+//                    self.showToast(message: "Cannot create Trash folder")
+//                    return
+//                }
+//            }
+//            if !self.moveFolder(from: self.getURL(for: .ProjectInShared), to: path.appendingPathComponent(LandingPageViewController.projectName)){
+//                self.showToast(message: "Cannot move to Trash")
+//                return
+//            }
+            self.deleteFolder(at: self.getURL(for: .ProjectInShared))
+            self.deleteFolder(at: self.getURL(for: .Project))
+            self.isDeleted = true
+            self.showToast(message: "Project deleted successfully")
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { // Change `2.0` to the desired number of seconds.
+                self.dismiss(animated: true, completion: nil)
+            }
+            
+        }))
+        
+        self.present(alert, animated: true)
+        
         
     }
     
@@ -759,7 +843,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     }
 
     func saveViewState() {
-        
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         saveIntoVariables()
         
 //        let path = getURL(for: .Documents).appendingPathComponent(LandingPageViewController.projectName)
@@ -771,7 +858,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     }
 
     func saveViewStateAsNew() {
-        
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         let alert = UIAlertController(title: "Enter the name of the Project", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addTextField(configurationHandler: { textField in
@@ -800,6 +890,10 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func takeScreenShot()
     {
+        if self.isDeleted{
+            self.showToast(message: "Project is deleted. Restore it from Trash")
+            return
+        }
         self.gridView.isHidden = true
         self.template?.templateView.exportAsImage(auxView: self.dropZone, attachBelow: true)
         self.showToast(message: "Saved Screenshot Successfully")
@@ -809,7 +903,6 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func exportAsPDF()
     {
-//        self.gridView.removeFromSuperview()
 //        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
         
 //        self.template?.templateView.backgroundColor = .orange
@@ -847,6 +940,24 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
             self.template = A4TemplateViewController()
         }
         self.navigationController?.pushViewController(self.template!, animated: true)
+    }
+    
+    func enableGroupSelect(){
+        HomeViewController.isGroup = !HomeViewController.isGroup
+        if HomeViewController.isGroup{
+            HomeViewController.selectedCount.isHidden = false
+            self.view.bringSubviewToFront(HomeViewController.selectedCount)
+            HomeViewController.selectedViews = []
+            self.showToast(message: "Group Selection Mode ENABLED")
+        }
+        else{
+            HomeViewController.selectedCount.isHidden = true
+            for view in HomeViewController.selectedViews{
+                view.alpha = 1
+                view.disable_resize()
+            }
+            self.showToast(message: "Group Selection Mode DISABLED")
+        }
     }
 }
     

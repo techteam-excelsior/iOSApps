@@ -25,6 +25,7 @@ protocol menuControllerDelegate {
     func moveToTrash()
     func listTrashItems()
     func setTemplate()
+    func enableGroupSelect()
 }
  // end protocol AppDirectoryNames
 
@@ -76,9 +77,13 @@ protocol AppFileManipulation : AppDirectoryNames
     
     func deleteFile(at path: AppDirectories, withName name: String) -> Bool
     
+    func deleteFolder(at url: URL)
+    
     func renameFile(at path: AppDirectories, with oldName: String, to newName: String) -> Bool
     
     func moveFile(withName name: String, inDirectory: AppDirectories, toDirectory directory: AppDirectories) -> Bool
+    
+    func moveFolder(from: URL, to: URL) -> Bool
     
     func copyFile(withName name: String, inDirectory: AppDirectories, toDirectory directory: AppDirectories) -> Bool
     

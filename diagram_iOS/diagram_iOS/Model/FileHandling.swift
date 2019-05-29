@@ -304,6 +304,10 @@ extension AppFileManipulation
         return true
     }
     
+    func deleteFolder(at url: URL){
+        try! FileManager.default.removeItem(at: url)
+    }
+    
     func renameFile(at path: AppDirectories, with oldName: String, to newName: String) -> Bool
     {
         let oldPath = getURL(for: path).appendingPathComponent(oldName)
@@ -324,6 +328,11 @@ extension AppFileManipulation
         return true
     }
     
+    func moveFolder(from: URL, to: URL) -> Bool{
+        try! FileManager.default.moveItem(at: from, to: to)
+        return true
+    }
+    	
     func copyFile(withName name: String, inDirectory: AppDirectories, toDirectory directory: AppDirectories) -> Bool
     {
         let originURL = buildFullPath(forFileName: name, inDirectory: inDirectory)

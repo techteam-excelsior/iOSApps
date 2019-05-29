@@ -16,6 +16,7 @@ enum MenuOption: Int, CustomStringConvertible{
     case Delete
     case Trash
     case SetTemplate
+    case groupSelect
     
     var description: String
     {
@@ -28,6 +29,7 @@ enum MenuOption: Int, CustomStringConvertible{
         case .Delete: return "Delete"
         case .Trash: return "Trash"
         case .SetTemplate: return "Change Template"
+        case .groupSelect: return "Select Multiple"
         }
     }
     
@@ -40,6 +42,7 @@ enum MenuOption: Int, CustomStringConvertible{
         case .Delete: return UIImage(named: "exit") ?? UIImage()
         case .Trash: return UIImage(named: "exit") ?? UIImage()
         case .SetTemplate: return #imageLiteral(resourceName: "profile")
+        case .groupSelect: return #imageLiteral(resourceName: "ok")
         }
     }
 }

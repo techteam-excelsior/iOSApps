@@ -25,24 +25,25 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     
     
-    var kResizeThumbSize : CGFloat = 45.0
+    var kResizeThumbSize : CGFloat = 20
     var isResizingLR = false
     var isResizingUL = false
     var isResizingUR = false
     var isResizingLL = false
     var touchStart = CGPoint.zero
     let borderlayer = CAShapeLayer()
+    let gripLayer = CAShapeLayer()
     let textView = VerticallyCenteredTextView()
 //    let textLabel = UITextField()
     var circles = [CircleView]()
     var delete : CircleView?
+    var duplicate : CircleView?
     var processID : Int?
     var myText :String?
     var resizeDelegate : resizeDropzoneDelegate?
     
    
     //    let mytapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(myTapAction))
-    
     
     var path: UIBezierPath!
     var main_layer: CAShapeLayer!
@@ -74,6 +75,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         
         //animated border
         let bounds = self.bounds
+//        let path = getBorderPath(forBounds: bounds)
         borderlayer.path = UIBezierPath(roundedRect: bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
         borderlayer.strokeColor = UIColor.black.cgColor
         borderlayer.fillColor = nil
@@ -90,9 +92,13 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         
         
         
-        
-        //createTextLayer()
-        
+        gripLayer.path = getBorderPath(forBounds: self.bounds)
+        gripLayer.strokeColor = UIColor.blue.cgColor
+        gripLayer.lineWidth = 3
+        gripLayer.fillColor = nil
+//        gripLayer.fillColor = UIColor.blue.cgColor
+        self.layer.addSublayer(gripLayer)
+
         
         
     }
@@ -264,6 +270,10 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         self.delete = del
         superview?.addSubview(del)
         
+        duplicate = CircleView(frame: CGRect(x: self.center.x - (self.bounds.size.width / 2) - 40 , y: self.center.y + (self.bounds.size.height / 2) , width: 40, height: 40), ofType: "duplicate")
+        duplicate?.myView = self
+        duplicate?.backgroundColor = .clear
+        superview?.addSubview(duplicate!)
     }
     
     func update_circle_views(){
@@ -272,7 +282,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         circles[2].center = CGPoint(x: self.center.x + (self.bounds.size.width / 2) + 20 , y: self.center.y)
         circles[3].center = CGPoint(x: self.center.x, y: self.center.y + (self.bounds.size.height / 2) + 20)
         delete?.center = CGPoint(x: self.center.x - (self.bounds.size.width / 2) - 20 , y: self.center.y - (self.bounds.size.height / 2) - 20)
-        
+        duplicate?.center = CGPoint(x: self.center.x - (self.bounds.size.width / 2) - 20 , y: self.center.y + (self.bounds.size.height / 2) + 20)
         
         circles[0].mainPoint = CGPoint(x: self.center.x - (self.bounds.size.width / 2) , y: self.center.y)
         circles[1].mainPoint = CGPoint(x: self.center.x  , y: self.center.y - (self.bounds.size.height / 2))
@@ -422,6 +432,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         
         self.subviews[0].center = CGPoint(x: self.bounds.size.width / 2, y: self.bounds.size.height / 2)
         self.borderlayer.path =  UIBezierPath(roundedRect: self.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
+        self.gripLayer.path = getBorderPath(forBounds: self.bounds)
         update_main_layer()
         update_circle_views()
         
@@ -452,6 +463,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
             self.center = CGPoint(x: self.center.x + touchPoint!.x - touchStart.x, y: self.center.y + touchPoint!.y - touchStart.y)
             self.subviews[0].center = CGPoint(x: self.bounds.size.width / 2, y: self.bounds.size.height / 2)
             self.borderlayer.path =  UIBezierPath(roundedRect: self.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
+            self.gripLayer.path = getBorderPath(forBounds: self.bounds)
             update_circle_views()
             resizeDelegate?.resizeDropZone()
             //            let scroll = self.superview?.superview as! UIScrollView
@@ -479,6 +491,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         
         self.subviews[0].center = CGPoint(x: self.bounds.size.width / 2, y: self.bounds.size.height / 2)
         self.borderlayer.path =  UIBezierPath(roundedRect: self.bounds, byRoundingCorners: .allCorners, cornerRadii: CGSize(width: 20, height: 20)).cgPath
+        self.gripLayer.path = getBorderPath(forBounds: self.bounds)
         update_circle_views()
         resizeDelegate?.resizeDropZone()
 
@@ -497,15 +510,18 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     func disable_resize() {
         self.borderlayer.isHidden = true
+        self.gripLayer.isHidden = true
         self.textView.isUserInteractionEnabled = false
         for circle in circles{
             circle.isHidden = true
         }
         self.delete?.isHidden = true
+        self.duplicate?.isHidden = true
     }
     
     func enable_resize() {
         self.borderlayer.isHidden = false
+        self.gripLayer.isHidden = false
         self.textView.isUserInteractionEnabled = true
         for circle in circles{
             if !circle.hasConnection{
@@ -513,20 +529,38 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
             }
         }
         self.delete?.isHidden = false
+        self.duplicate?.isHidden = false
     }
     
     //double tap to enable/disable resize
     @objc func myTapAction(_ sender: UITapGestureRecognizer) {
-        
         if self.borderlayer.isHidden {
             enable_resize()
         }
         else{
             disable_resize()
         }
-        
+        if HomeViewController.isGroup{
+            self.alpha = 0.8
+            HomeViewController.selectedViews.append(self)
+        }
     }
     
     
+    func getBorderPath(forBounds bounds: CGRect) -> CGPath {
+        
+        let combinedPath = CGMutablePath()
+        
+        let centerPoints: [CGPoint] = [CGPoint(x: bounds.minX + 5, y: bounds.minY + 5), CGPoint(x: bounds.minX + 5 ,y: bounds.height - 5), CGPoint(x: bounds.width - 5, y: bounds.minY + 5), CGPoint(x: bounds.width - 5 , y: bounds.height - 5)]
+        for center in centerPoints{
+            let path = UIBezierPath()
+            path.addArc(withCenter: center, radius: 10, startAngle: 0, endAngle: CGFloat.pi*2, clockwise: true)
+            combinedPath.addPath(path.cgPath)
+        }
+        return combinedPath
+    }
+    
     
 }
+
+
