@@ -24,18 +24,7 @@ extension UIView {
         UIGraphicsBeginPDFContextToData(pdfData, pdfPageFrame, nil)
         UIGraphicsBeginPDFPageWithInfo(pdfPageFrame, nil)
         guard let pdfContext = UIGraphicsGetCurrentContext() else { return nil }
-        //        pdfContext.scaleBy(x: 1/8, y: 1/8)
         
-//        self.layer.render(in: pdfContext)
-//        if auxView != nil{
-//            if below == true{
-//                pdfContext.translateBy(x: 0, y: self.bounds.size.height)
-//            }
-//            else{
-//                pdfContext.translateBy(x: self.bounds.size.width, y: 0)
-//            }
-//            auxView?.layer.render(in: pdfContext)
-//        }
         var scaleX : CGFloat = 1
         if auxView != nil{
             scaleX = auxView!.bounds.width / self.bounds.width

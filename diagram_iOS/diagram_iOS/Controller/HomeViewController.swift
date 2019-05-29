@@ -66,17 +66,6 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         load_action()
     }
     
-//    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//        print("Transitioning into size: ",size)
-//
-//        height = UIScreen.main.bounds.height
-//        width = UIScreen.main.bounds.width
-//        self.scrollView?.frame = CGRect(x: 0, y: 0, width: size.width, height: size.height)
-//        self.slideViewController?.removeFromParent()
-//        self.slideView.removeFromSuperview()
-//        configureSlider()
-//    }
-    
     override func viewDidLayoutSubviews() {
         height = UIScreen.main.bounds.height
         width = UIScreen.main.bounds.width
@@ -820,10 +809,12 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
     
     func exportAsPDF()
     {
-        self.gridView.removeFromSuperview()
+//        self.gridView.removeFromSuperview()
 //        self.template?.templateView.frame = CGRect(x: 0, y: 0, width: dropZone.frame.width, height: 300)
         
-        self.template?.templateView.backgroundColor = .orange
+//        self.template?.templateView.backgroundColor = .orange
+        
+        self.gridView.isHidden = true
         
         let popoverVC = self.template?.templateView.exportAsPdfFromView(name: LandingPageViewController.projectName, auxView: self.dropZone, attachBelow: true) as? PdfPreviewViewController
         
@@ -842,11 +833,12 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
             present(popoverVC!, animated: true, completion: nil)
         }
 //        self.template?.view.addSubview(template!.templateView)
-        self.gridView = GridView(frame : dropZone!.frame)
-        self.gridView.backgroundColor = UIColor.clear
-        self.gridView.isUserInteractionEnabled = false
-        self.dropZone!.addSubview(gridView)
-        self.dropZone.sendSubviewToBack(gridView)
+//        self.gridView = GridView(frame : dropZone!.frame)
+//        self.gridView.backgroundColor = UIColor.clear
+//        self.gridView.isUserInteractionEnabled = false
+//        self.dropZone!.addSubview(gridView)
+//        self.dropZone.sendSubviewToBack(gridView)
+        self.gridView.isHidden = false
     }
     
     func setTemplate(){
