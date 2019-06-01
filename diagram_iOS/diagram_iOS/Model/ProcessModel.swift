@@ -20,10 +20,11 @@ enum sides:Int, Codable {
 
 class helperDatabase {
     var idAndAny = [Int: Any]()
-    var viewsAndData = [processView: uiViewData]()
-    var views = [processView]()
+    var viewsAndData = [ProcessView: uiViewData]()
+    var views = [ProcessView]()
     var arrowsAndData = [ArrowShape: arrowData]()
     var arrows = [ArrowShape]()
+    var viewAndKaizenBursts = [ProcessView:CircleView]()
     
     func reset(){
         idAndAny.removeAll()

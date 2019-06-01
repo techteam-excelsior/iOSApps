@@ -20,7 +20,7 @@ class CircleView : UIView , UIGestureRecognizerDelegate {
             self.isHidden = self.hasConnection
         }
     }
-    var myView : processView?
+    var myView : ProcessView?
     var myLayer : ArrowShape?
     var isDelete : Bool?
     let imageLayer = CALayer()
@@ -68,7 +68,10 @@ class CircleView : UIView , UIGestureRecognizerDelegate {
         else if type == "duplicate"{
             myImage = UIImage(named: "duplicate")?.cgImage
         }
-        imageLayer.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+        else if type == "kaizen"{
+            myImage = UIImage(named: "kaizen_burst")?.cgImage
+        }
+        imageLayer.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         imageLayer.contents = myImage
     }
     

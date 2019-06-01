@@ -26,6 +26,7 @@ protocol menuControllerDelegate {
     func listTrashItems()
     func setTemplate()
     func enableGroupSelect()
+    func enableTroubleShooting()
 }
  // end protocol AppDirectoryNames
 

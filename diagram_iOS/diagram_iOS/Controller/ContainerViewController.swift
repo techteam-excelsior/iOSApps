@@ -130,6 +130,8 @@ class ContainerViewController: UIViewController {
             ContainerViewController.menuDelegate!.setTemplate()
         case .groupSelect:
             ContainerViewController.menuDelegate!.enableGroupSelect()
+        case .troubleShoot:
+            ContainerViewController.menuDelegate!.enableTroubleShooting()
         }
     }
     

@@ -30,6 +30,10 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     private var countdownValue: Double?
     private var sliderButton = UIButton()
     static var pdfData: NSMutableData?
+    
+    var kbImage : CircleView!
+    
+    
     //drop variables
     private let shapes = ["rectangle", "triangle", "circle", "rhombus"]
     private var dropZone: UIView!
@@ -57,10 +61,11 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     private var isDeleted = false
     
     static var isGroup = false
+    static var inTroubleShootingMode = false
     
     static var selectedCount = UILabel()
     
-    static var selectedViews : [processView] = []{
+    static var selectedViews : [ProcessView] = []{
         didSet{
             selectedCount.text = "\(selectedViews.count) Selected"
         }
@@ -91,8 +96,8 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         width = UIScreen.main.bounds.width
         self.scrollView?.frame = CGRect(x: 0, y: 0, width: width, height: height)
         self.slideViewController?.removeFromParent()
-        self.slideView.removeFromSuperview()
-        configureSlider()
+//        self.slideView.removeFromSuperview()
+//        configureSlider()
         HomeViewController.selectedCount.frame = CGRect(x: self.view.bounds.width/2 - 50, y: 100, width: 100, height: 50)
     }
     
@@ -395,7 +400,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
     
     func add_a_shape(shape: String , x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat, withID id: Int, withText text: String, withCircleID IDs: [Int]){
         //choose frame size
-        let demoView = processView(frame: CGRect(x: x,
+        let demoView = ProcessView(frame: CGRect(x: x,
                                                  y: y,
                                                  width: width,
                                                  height: height), ofShape: shape, withID: id, withText: text)
@@ -419,6 +424,7 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         }
         demoView.delete?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(deletegesture)))
         demoView.duplicate?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(duplicategesture)))
+        demoView.kaizenButton?.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addKaizanBurst)))
         
         data.viewsAndData[demoView] = uiViewData(x: Double(x), y: Double(y), width: Double(width), height: Double(height), shape: shape, text: demoView.textView.text, id: id, leftID: IDs[0], topID: IDs[1], rightID: IDs[2], bottomID: IDs[3])
         data.idAndAny[id] = demoView
@@ -506,38 +512,6 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
 
     }
     
-    
-//    @objc func didPan(sender: UIPanGestureRecognizer)
-//    {
-//
-//        let velocity = sender.velocity(in: view)
-//        let translation = sender.translation(in: view)
-//
-//        if sender.state == .began
-//        {
-//            sliderCenter = slideView.center
-//            print("Gesture began")
-//
-//        }
-//        else if sender.state == .changed
-//        {
-//            slideView.center = CGPoint(x: sliderCenter.x, y: sliderCenter.y + translation.y)
-//            print("Gesture is changing")
-//        }
-//        else if sender.state == .ended
-//        {
-//            if velocity.y > 0
-//            {
-//                UIView.animate(withDuration: 0.8, animations: { () -> Void in self.slideView.center = self.sliderDown})
-//            }
-//            else
-//            {
-//                UIView.animate(withDuration: 0.8, animations: {() -> Void in self.slideView.center = self.sliderUp })
-//            }
-//            print("Gesture ended")
-//        }
-//
-//    }
     
     @objc func didClickMenu()
     {
@@ -638,6 +612,48 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
         self.add_a_shape(shape: srcView.shape!, x: srcView.frame.minX + 50, y: srcView.frame.minY + 50, width: srcView.frame.width, height: srcView.frame.height, withID: self.getUniqueID(), withText: srcView.textView.text, withCircleID: [self.getUniqueID(), self.getUniqueID(), self.getUniqueID(), self.getUniqueID()])
     }
     
+    @objc func addKaizanBurst(_ sender: UITapGestureRecognizer){
+        let kaizen = sender.view as! CircleView?
+        if let sourceView = (kaizen!.myView)
+        {
+            if !sourceView.addedKaizen
+            {
+                print("entered adding")
+                kbImage = CircleView(frame: CGRect(x: 0  , y: 0, width: 100, height: 100), ofType: "kaizen")
+                dropZone.addSubview(kbImage)
+                kbImage.center = CGPoint(x: sourceView.frame.maxX, y: sourceView.frame.maxY)
+                
+                
+                kbImage.isUserInteractionEnabled = true
+                kbImage.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(addKaizanBurst(_:))))
+                kbImage.myView = nil
+                sourceView.addedKaizen = true
+                data.viewAndKaizenBursts[sourceView] = kbImage
+                sourceView.showingKaizenButton = true
+                sourceView.kaizenButton?.isHidden = true
+            }
+        }
+        if kaizen?.myView == nil{
+//            kaizen?.imageLayer.contents = UIImage(named: "ok")?.cgImage
+            let addNewButton = UIButton(frame: CGRect(x: (kaizen?.frame.maxX)!, y: (kaizen?.frame.midY)!, width: 200, height: 50))
+            addNewButton.backgroundColor = .lightGray
+            addNewButton.setTitle("Add New", for: .normal)
+            addNewButton.layer.cornerRadius = 5
+            addNewButton.addTarget(self, action: #selector(addNew), for: .touchUpInside)
+            dropZone.addSubview(addNewButton)
+            
+            let addExisting = UIButton(frame: CGRect(x: (addNewButton.frame.minX), y: (addNewButton.frame.maxY) + 5, width: 200, height: 50))
+            addExisting.backgroundColor = .lightGray
+            addExisting.layer.cornerRadius = 5
+            addExisting.setTitle("Add New", for: .normal)
+            addExisting.addTarget(self, action: #selector(addNew), for: .touchUpInside)
+            dropZone.addSubview(addExisting)
+        }
+        
+    }
+    
+    
+    
     //gesture to recognize tap in dropZone which contains all the diagrams
     @objc func singleTap(_ sender: UITapGestureRecognizer) {
         if !HomeViewController.isGroup{
@@ -695,6 +711,10 @@ class HomeViewController: UIViewController, UIDropInteractionDelegate, UIScrollV
             }
         }
         return nil
+    }
+    
+    @objc func addNew (){
+        print("Select From 5Why or FishBone")
     }
 
 // End of Class HomeViewController
@@ -958,6 +978,38 @@ extension HomeViewController: menuControllerDelegate, UIPopoverPresentationContr
             }
             self.showToast(message: "Group Selection Mode DISABLED")
         }
+    }
+    
+    func enableTroubleShooting()
+    {
+        HomeViewController.inTroubleShootingMode = !HomeViewController.inTroubleShootingMode
+        self.slideView.isHidden = !self.slideView.isHidden
+        
+        
+        if !HomeViewController.inTroubleShootingMode {
+            for view in data.viewsAndData {
+                view.key.kaizenButton?.isHidden = true
+                view.key.showingKaizenButton = false
+            }
+            
+            print("Number of KBImages added = ", data.viewAndKaizenBursts.count)
+            for view in data.viewAndKaizenBursts {
+                print("Hiding KB Image")
+                view.value.isHidden = true
+            }
+        }
+        else {
+            for view in data.viewAndKaizenBursts {
+                if view.key.addedKaizen {
+                    view.key.kaizenButton?.isHidden = true
+                    view.key.showingKaizenButton = true
+                    let sourceView = view.key
+                    view.value.center = CGPoint(x: sourceView.frame.maxX, y: sourceView.frame.maxY)
+                    view.value.isHidden = false
+                }
+            }
+        }
+        
     }
 }
     

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
+class ProcessView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     var shape: String?
     
@@ -38,9 +38,12 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     var circles = [CircleView]()
     var delete : CircleView?
     var duplicate : CircleView?
+    var kaizenButton : CircleView?
     var processID : Int?
     var myText :String?
     var resizeDelegate : resizeDropzoneDelegate?
+    var showingKaizenButton = false
+    var addedKaizen = false
     
    
     //    let mytapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(myTapAction))
@@ -142,7 +145,6 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         path.close()
     }
     
-    
     func createRoundedRectangle() {
         path = UIBezierPath()
         path.move(to: CGPoint(x: 40, y: 10))
@@ -175,9 +177,6 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         path.addLine(to: CGPoint(x: self.frame.width - 20, y: self.frame.height - 10))
     }
     
-    
-    
-   
     func createTextView(text: String) {
         
         textView.text = text
@@ -208,36 +207,6 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
             textView.text = ""
         }
     }
-//    func createTextView_1() {
-//
-//        textLabel.text = "Hello"
-//        textLabel.frame = CGRect(x: 0.0, y: self.frame.size.height/2 - 20.0, width: self.frame.size.width, height: 40.0)
-//        //        textView.frame = CGRect(x: 20.0, y: 20.0, width: self.bounds.size.width - 20, height: self.bounds.size.height - 20.0)
-//        textLabel.textAlignment = NSTextAlignment.center
-//        textLabel.backgroundColor = UIColor.clear
-//        textLabel.isUserInteractionEnabled = true
-//        textLabel.center = CGPoint(x: self.bounds.size.width / 2, y: self.bounds.size.height / 2)
-//        //        textLabel = 2
-//        textLabel.sizeToFit()
-//        //        textLabel.lines
-//        //        textLabel.textContainer.exclusionPaths = [path]
-//        self.addSubview(textLabel)
-//    }
-    
-//
-//    func createTextLayer() {
-//        let textLayer = CATextLayer()
-//        textLayer.string = "WOW!\nThis is text on a layer!"
-//        textLayer.foregroundColor = UIColor.white.cgColor
-//        textLayer.font = UIFont(name: "Avenir", size: 15.0)
-//        textLayer.fontSize = 15.0
-//        textLayer.alignmentMode = CATextLayerAlignmentMode.center
-//        textLayer.backgroundColor = UIColor.orange.cgColor
-//        textLayer.frame = CGRect(x: 0.0, y: self.frame.size.height/2 - 20.0, width: self.frame.size.width, height: 40.0)
-//        textLayer.contentsScale = UIScreen.main.scale
-//        self.layer.addSublayer(textLayer)
-//    }
-    
     
     func createCircles(_ id1: Int, _ id2: Int, _ id3: Int,  _ id4: Int){
         let cir1 = CircleView(frame: CGRect(x: self.center.x - (self.bounds.size.width / 2) - 40 , y: self.center.y - 20, width: 40, height: 40), isSide: sides.left.rawValue, withID: id1)//left
@@ -264,16 +233,21 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         superview?.addSubview(cir3)
         superview?.addSubview(cir4)
         
-        let del = CircleView(frame: CGRect(x: self.center.x - (self.bounds.size.width / 2) - 40 , y: self.center.y - (self.bounds.size.height / 2) - 40, width: 40, height: 40), isDelete: true)
-        del.myView = self
-        del.backgroundColor = .clear
-        self.delete = del
-        superview?.addSubview(del)
+        delete = CircleView(frame: CGRect(x: self.center.x - (self.bounds.size.width / 2) - 40 , y: self.center.y - (self.bounds.size.height / 2) - 40, width: 40, height: 40), isDelete: true)
+        delete?.myView = self
+        delete?.backgroundColor = .clear
+        superview?.addSubview(delete!)
         
         duplicate = CircleView(frame: CGRect(x: self.center.x - (self.bounds.size.width / 2) - 40 , y: self.center.y + (self.bounds.size.height / 2) , width: 40, height: 40), ofType: "duplicate")
         duplicate?.myView = self
         duplicate?.backgroundColor = .clear
         superview?.addSubview(duplicate!)
+        
+        kaizenButton = CircleView(frame: CGRect(x: self.center.x + (self.bounds.size.width / 2) + 20  , y: self.center.y + (self.bounds.size.height / 2) + 20 , width: 40, height: 40), ofType: "kaizen")
+        kaizenButton?.myView = self
+        kaizenButton?.backgroundColor = .clear
+        superview?.addSubview(kaizenButton!)
+        kaizenButton!.isHidden = true
     }
     
     func update_circle_views(){
@@ -283,6 +257,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         circles[3].center = CGPoint(x: self.center.x, y: self.center.y + (self.bounds.size.height / 2) + 20)
         delete?.center = CGPoint(x: self.center.x - (self.bounds.size.width / 2) - 20 , y: self.center.y - (self.bounds.size.height / 2) - 20)
         duplicate?.center = CGPoint(x: self.center.x - (self.bounds.size.width / 2) - 20 , y: self.center.y + (self.bounds.size.height / 2) + 20)
+        kaizenButton?.center = CGPoint(x: self.center.x + (self.bounds.size.width / 2) + 20 , y: self.center.y + (self.bounds.size.height / 2) + 20 )
         
         circles[0].mainPoint = CGPoint(x: self.center.x - (self.bounds.size.width / 2) , y: self.center.y)
         circles[1].mainPoint = CGPoint(x: self.center.x  , y: self.center.y - (self.bounds.size.height / 2))
@@ -381,51 +356,60 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         
     }
     
-    
-    
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        //        let scroll = self.superview?.superview as! UIScrollView
-        //        scroll.isScrollEnabled = false
-        //see if the resize has to happen, if so in which direction.
-        self.textView.resignFirstResponder()
-        self.alpha = 0.2
-        //        self.frame = CGRect(x: self.frame.origin.x - 20, y: self.frame.origin.y - 20, width: self.frame.width + 40, height: self.frame.height + 40)
-        //        if self.borderlayer.isHidden{
-        //            return
-        //        }
-        let touch = touches.first
-        //print("Touchesbegan")
-        self.touchStart = touch!.location(in: self)
-        //print("\(self.bounds.size.width) \(self.bounds.size.height) \(touchStart.x) \(touchStart.y)")
-        if (self.bounds.size.width - touchStart.x < kResizeThumbSize) && (self.bounds.size.height - touchStart.y < kResizeThumbSize){
-            isResizingLR = true
-        }else{
-            isResizingLR = false
+    
+        if HomeViewController.inTroubleShootingMode{
+            update_circle_views()
+            return
         }
-        if (touchStart.x < kResizeThumbSize && touchStart.y < kResizeThumbSize){
-            isResizingUL = true
-        }else{
-            isResizingUL = false
-        }
-        
-        if (self.bounds.size.width-touchStart.x < kResizeThumbSize && touchStart.y<kResizeThumbSize){
-            isResizingUR = true
-        }else{
-            isResizingUR = false
-        }
-        if (touchStart.x < kResizeThumbSize && self.bounds.size.height - touchStart.y < kResizeThumbSize){
-            isResizingLL = true
-        }else{
-            isResizingLL = false
-        }
-        //print("\(isResizingLL) \(isResizingLR) \(isResizingUL) \(isResizingUR)")
+   
+    //        let scroll = self.superview?.superview as! UIScrollView
+    //        scroll.isScrollEnabled = false
+    //see if the resize has to happen, if so in which direction.
+    self.textView.resignFirstResponder()
+    self.alpha = 0.2
+    //        self.frame = CGRect(x: self.frame.origin.x - 20, y: self.frame.origin.y - 20, width: self.frame.width + 40, height: self.frame.height + 40)
+    //        if self.borderlayer.isHidden{
+    //            return
+    //        }
+    let touch = touches.first
+    //print("Touchesbegan")
+    self.touchStart = touch!.location(in: self)
+    //print("\(self.bounds.size.width) \(self.bounds.size.height) \(touchStart.x) \(touchStart.y)")
+    if (self.bounds.size.width - touchStart.x < kResizeThumbSize) && (self.bounds.size.height - touchStart.y < kResizeThumbSize){
+        isResizingLR = true
+    }else{
+        isResizingLR = false
+    }
+    if (touchStart.x < kResizeThumbSize && touchStart.y < kResizeThumbSize){
+        isResizingUL = true
+    }else{
+        isResizingUL = false
     }
     
+    if (self.bounds.size.width-touchStart.x < kResizeThumbSize && touchStart.y<kResizeThumbSize){
+        isResizingUR = true
+    }else{
+        isResizingUR = false
+    }
+    if (touchStart.x < kResizeThumbSize && self.bounds.size.height - touchStart.y < kResizeThumbSize){
+        isResizingLL = true
+    }else{
+        isResizingLL = false
+    }
+    //print("\(isResizingLL) \(isResizingLR) \(isResizingUL) \(isResizingUR)")
+}
+    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        if HomeViewController.inTroubleShootingMode{
+            update_circle_views()
+            return
+        }
         //        print("touched ended")
         //        let midPoint = self.center.rounded(to: 50)
         //
         //        self.center = midPoint
+        
         self.alpha = 1
         let new_frame = CGRect(x: self.frame.origin.x.rounded(to: 50)-10, y: self.frame.origin.y.rounded(to: 50)-10, width: self.frame.width.rounded(to: 50)+20, height :self.frame.height.rounded(to: 50)+20)
         self.frame = new_frame
@@ -440,6 +424,7 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
         //        let scroll = self.superview?.superview as! UIScrollView
         //        scroll.isScrollEnabled = true
     }
+    
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
         //        let scroll = self.superview?.superview as! UIScrollView
         //        scroll.isScrollEnabled = true
@@ -449,6 +434,10 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     //handle the resize, pan and move all the view appropriately
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
 //        print("touches moved")
+        if HomeViewController.inTroubleShootingMode{
+            update_circle_views()
+            return
+        }
         let touchPoint =  touches.first?.location(in: self)
         let previous = touches.first?.previousLocation(in: self)
         
@@ -534,7 +523,20 @@ class processView: UIView , UIGestureRecognizerDelegate, UITextViewDelegate {
     
     //double tap to enable/disable resize
     @objc func myTapAction(_ sender: UITapGestureRecognizer) {
-        if self.borderlayer.isHidden {
+        
+        if HomeViewController.inTroubleShootingMode
+        {
+            showingKaizenButton = !showingKaizenButton
+            disable_resize()
+            if showingKaizenButton {
+                self.kaizenButton?.isHidden = false
+            }
+            else {
+                self.kaizenButton?.isHidden = true
+            }
+        }
+        
+        else if self.borderlayer.isHidden {
             enable_resize()
         }
         else{
